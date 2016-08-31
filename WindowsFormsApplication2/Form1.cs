@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Linq;
 using System.Data.Linq.SqlClient;
+using System.Threading;
 
 namespace WindowsFormsApplication2
 {
@@ -17,18 +18,32 @@ namespace WindowsFormsApplication2
         {
             InitializeComponent();
             LoadData();
+
+            lblInfo.Text = "Found " + dataGridView1.RowCount + " records.";
         }
 
         #region Public Events
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            SetGridStyle();
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             LoadDataFromDisk();
+
+            lblInfo.Text = "Found " + dataGridView1.RowCount + " records.";
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveToDb();
+        }
+        
+        private void btnDeleteDuplicates_Click(object sender, EventArgs e)
+        {
+            DeleteDuplicates();
         }
 
         #endregion
@@ -51,7 +66,10 @@ namespace WindowsFormsApplication2
 
         private void LoadData()
         {
-            logger.Trace("Inside LoadData()");
+            string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            LogMethodInsideTrace(methodName);
+
+            DateTime dtStart = DateTime.Now;
 
             BL objBL = new BL();
             List<Movie> listMovies = null;
@@ -60,16 +78,20 @@ namespace WindowsFormsApplication2
             {
                 listMovies = objBL.GetMovies();
                 dataGridView1.DataSource = listMovies;
+
+                logger.Info(GetMessageTotalTimeTaken(methodName: methodName, dtStart: dtStart));
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Exception Inside LoadData()");
+                logger.Error(ex, "Exception Inside " + methodName);
             }
         }
 
         private void LoadDataFromDisk()
         {
-            logger.Trace("Inside LoadDataFromDisk()");
+            DateTime dtStartTime = DateTime.Now;
+            string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+            LogMethodInsideTrace(methodName);
             //Directory dir = new Directory;
             //dir.
             //F:\Movies\2016
@@ -79,8 +101,14 @@ namespace WindowsFormsApplication2
 
             List<Movie> listMovies = new List<Movie>();
             Movie objMovie = new Movie();
+
+            string[] fileExtExcluded = new string[] { ".txt", ".nfo", ".db", ".jpg", ".png" };
+
             foreach (string file in strFiles)
             {
+                if (fileExtExcluded.Contains(Path.GetExtension(file)))
+                    continue;
+
                 logger.Debug(file);
 
                 string fileName = Path.GetFileName(file);
@@ -106,34 +134,57 @@ namespace WindowsFormsApplication2
                 filteredMovies = listMovies.Where(x => myRegex.IsMatch(x.Name)).ToList();
 
             dataGridView1.DataSource = filteredMovies;
+
+            logger.Info(GetMessageTotalTimeTaken(methodName, dtStartTime));
         }
 
         private void SaveToDb()
         {
-            logger.Trace("Inside SaveToDb()");
+            DateTime dtStartTime = DateTime.Now;
+            string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
-            List<Movie> listMovie = new List<Movie>();
+            LogMethodInsideTrace(methodName);
 
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            try
             {
-                Movie objMovie = new Movie();
+                ThreadStart testThreadStart = new ThreadStart(new Form1().DoDbSaving);
+                Thread testThread = new Thread(testThreadStart);
 
-                string columnName = null;
-
-                columnName  = Utility.GetPropertyName(() => objMovie.Name);
-                objMovie.Name = GetValue(dataGridView1.Rows[i].Cells[columnName]);
-
-                columnName = Utility.GetPropertyName(() => objMovie.Year);
-                objMovie.Year= GetValueInt(dataGridView1.Rows[i].Cells[columnName]);
-
-                columnName = Utility.GetPropertyName(() => objMovie.FullPath);
-                objMovie.FullPath = GetValue(dataGridView1.Rows[i].Cells[columnName]);
-
-                listMovie.Add(objMovie);
+                testThread.Start();
+                
+                logger.Debug("Saved Movies to Disk Successfully.");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Movie Saving FAILED!");
             }
 
+            logger.Info(GetMessageTotalTimeTaken(methodName, dtStartTime));
+        }
+
+        private void DoDbSaving()
+        {
+            List<Movie> listMovie = GetMoviesFromGrid();
             BL objBL = new BL();
             objBL.SaveMovies(listMovie);
+        }
+
+        private void DeleteDuplicates()
+        {
+            logger.Trace("Inside DeleteDuplicates()");
+
+            List<Movie> listMovie = GetMoviesFromGrid();
+
+            BL objBL = new BL();
+            try
+            {
+                objBL.DeleteDuplicates(listMovie);
+                logger.Debug("Saved Movies to Disk Successfully.");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Movie Saving FAILED!");
+            }
         }
 
         private string GetValue(object obj)
@@ -162,9 +213,60 @@ namespace WindowsFormsApplication2
                 return temp;
             }
         }
+
+        private List<Movie> GetMoviesFromGrid()
+        {
+            List<Movie> listMovie = new List<Movie>();
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                Movie objMovie = new Movie();
+
+                string columnName = null;
+
+                columnName = nameof(objMovie.Name);
+                objMovie.Name = GetValue(dataGridView1.Rows[i].Cells[columnName].Value);
+
+                columnName = nameof(objMovie.Year);
+                objMovie.Year = GetValueInt(dataGridView1.Rows[i].Cells[columnName].Value);
+
+                columnName = nameof(objMovie.FullPath);
+                objMovie.FullPath = GetValue(dataGridView1.Rows[i].Cells[columnName].Value);
+
+                listMovie.Add(objMovie);
+            }
+
+            return listMovie;
+        }
+
+        private void SetGridStyle()
+        {
+            if (dataGridView1.Columns.Count > 0)
+            {
+                dataGridView1.Columns[nameof(Movie.Year)].Width = 40;
+                dataGridView1.Columns[nameof(Movie.FullPath)].Width = 200;
+            }
+        }
+
+        private string GetMessageTotalTimeTaken(string methodName, DateTime dtStart)
+        {
+            return methodName + ", Total Time Taken = " + (DateTime.Now - dtStart).TotalSeconds + " secs";
+        }
+
+        private void LogMethodInsideTrace(string methodName)
+        {
+            logger.Trace("Inside " + methodName);
+        }
         #endregion
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-
-
-
 }

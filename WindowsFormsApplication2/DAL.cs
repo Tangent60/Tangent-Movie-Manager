@@ -17,7 +17,7 @@ namespace WindowsFormsApplication2
                 ("Data Source=DemoT.db;Version=3;New=False;Compress=True;");
         }
 
-        private void ExecuteQuery(string txtQuery)
+        public void ExecuteQuery(string txtQuery)
         {
             SetConnection();
 
