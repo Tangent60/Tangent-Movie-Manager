@@ -89,6 +89,7 @@ namespace WindowsFormsApplication2
         {
             DAL objDal = new DAL();
 
+            movie.Name = GetSqlCompatibleText(movie.Name);
             movie.FullPath = GetSqlCompatibleText(movie.FullPath);
 
             string txtSqlQuery = "INSERT INTO Movie (" + nameof(movie.Name) + ", " + nameof(movie.Year) + ", " + nameof(movie.FullPath) + ") ";

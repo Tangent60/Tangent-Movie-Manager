@@ -35,6 +35,13 @@ namespace WindowsFormsApplication2
 
             lblInfo.Text = "Found " + dataGridView1.RowCount + " records.";
         }
+        
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadData(txtSearch.Text);
+
+            lblInfo.Text = "Found " + dataGridView1.RowCount + " records.";
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -45,7 +52,7 @@ namespace WindowsFormsApplication2
         {
             DeleteDuplicates();
         }
-
+        
         #endregion
 
         #region Private Methods
@@ -64,7 +71,7 @@ namespace WindowsFormsApplication2
             return year;
         }
 
-        private void LoadData()
+        private void LoadData(string filter = null)
         {
             string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             LogMethodInsideTrace(methodName);
@@ -77,6 +84,10 @@ namespace WindowsFormsApplication2
             try
             {
                 listMovies = objBL.GetMovies();
+
+                if(filter != null)
+                    listMovies = FilterMovies(listMovies, filter);
+
                 dataGridView1.DataSource = listMovies;
 
                 logger.Info(GetMessageTotalTimeTaken(methodName: methodName, dtStart: dtStart));
@@ -121,52 +132,54 @@ namespace WindowsFormsApplication2
 
                 listMovies.Add(objMovie);
             }
-
-            List<Movie> filteredMovies;
-
-            filteredMovies = listMovies.ToList();
-
-            string searchText = txtSearch.Text;
-
-            var myRegex = new Regex(@searchText);
-
-            if (!string.IsNullOrEmpty(txtSearch.Text))
-                filteredMovies = listMovies.Where(x => myRegex.IsMatch(x.Name)).ToList();
-
-            dataGridView1.DataSource = filteredMovies;
+            
+            dataGridView1.DataSource = FilterMovies(listMovies, txtSearch.Text);
 
             logger.Info(GetMessageTotalTimeTaken(methodName, dtStartTime));
         }
 
+        private List<Movie> FilterMovies(List<Movie> listMovies, string searchText)
+        {
+            List<Movie> filteredMovies;
+
+            filteredMovies = listMovies.ToList();
+
+            var myRegex = new Regex(@searchText, RegexOptions.IgnoreCase);
+
+            if (!string.IsNullOrEmpty(txtSearch.Text))
+                filteredMovies = listMovies.Where(x => myRegex.IsMatch(x.Name)).ToList();
+
+            return filteredMovies;
+        }
+
         private void SaveToDb()
         {
-            DateTime dtStartTime = DateTime.Now;
             string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
 
             LogMethodInsideTrace(methodName);
 
             try
             {
-                ThreadStart testThreadStart = new ThreadStart(new Form1().DoDbSaving);
+                ThreadStart testThreadStart = new ThreadStart(this.DoDbSaving);
                 Thread testThread = new Thread(testThreadStart);
 
                 testThread.Start();
-                
-                logger.Debug("Saved Movies to Disk Successfully.");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "Movie Saving FAILED!");
             }
-
-            logger.Info(GetMessageTotalTimeTaken(methodName, dtStartTime));
         }
 
         private void DoDbSaving()
         {
+            DateTime dtStartTime = DateTime.Now;
+            string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             List<Movie> listMovie = GetMoviesFromGrid();
             BL objBL = new BL();
             objBL.SaveMovies(listMovie);
+
+            logger.Info(GetMessageTotalTimeTaken(methodName, dtStartTime));
         }
 
         private void DeleteDuplicates()

@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SQLite;
+using System.Configuration;
 
 namespace WindowsFormsApplication2
 {
@@ -13,8 +14,8 @@ namespace WindowsFormsApplication2
 
         private void SetConnection()
         {
-            _sqlConn = new SQLiteConnection
-                ("Data Source=DemoT.db;Version=3;New=False;Compress=True;");
+            string connString = ConfigurationManager.AppSettings["ConnString"];
+            _sqlConn = new SQLiteConnection(connString);
         }
 
         public void ExecuteQuery(string txtQuery)
