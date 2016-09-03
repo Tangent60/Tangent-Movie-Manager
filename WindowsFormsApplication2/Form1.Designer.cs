@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApplication2
 {
-    partial class Form1
+    partial class frmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,29 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.btnLoad = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblSearch = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
-            this.lblInfo = new System.Windows.Forms.Label();
             this.btnDeleteDuplicates = new System.Windows.Forms.Button();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripBtnSave = new System.Windows.Forms.ToolStripButton();
-            this.btnRefresh = new System.Windows.Forms.Button();
+            this.mbtnRefresh = new MetroFramework.Controls.MetroButton();
+            this.mtxtSearch = new MetroFramework.Controls.MetroTextBox();
+            this.mlblInfo = new MetroFramework.Controls.MetroLabel();
+            this.Play = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(219, 28);
+            this.btnLoad.Location = new System.Drawing.Point(126, 12);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.Size = new System.Drawing.Size(75, 39);
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -60,11 +56,14 @@
             // 
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Play});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(516, 230);
+            this.dataGridView1.Size = new System.Drawing.Size(516, 275);
             this.dataGridView1.TabIndex = 1;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // panel1
             // 
@@ -72,17 +71,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.dataGridView1);
-            this.panel1.Location = new System.Drawing.Point(0, 105);
+            this.panel1.Location = new System.Drawing.Point(0, 126);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(516, 230);
+            this.panel1.Size = new System.Drawing.Size(516, 275);
             this.panel1.TabIndex = 2;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(126, 57);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(261, 20);
-            this.txtSearch.TabIndex = 3;
             // 
             // lblSearch
             // 
@@ -95,94 +87,79 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(300, 28);
+            this.btnSave.Location = new System.Drawing.Point(207, 12);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.Size = new System.Drawing.Size(75, 39);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // lblInfo
-            // 
-            this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(123, 80);
-            this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(35, 13);
-            this.lblInfo.TabIndex = 6;
-            this.lblInfo.Text = "label1";
-            // 
             // btnDeleteDuplicates
             // 
-            this.btnDeleteDuplicates.Location = new System.Drawing.Point(429, 28);
+            this.btnDeleteDuplicates.Location = new System.Drawing.Point(300, 12);
             this.btnDeleteDuplicates.Name = "btnDeleteDuplicates";
-            this.btnDeleteDuplicates.Size = new System.Drawing.Size(75, 23);
+            this.btnDeleteDuplicates.Size = new System.Drawing.Size(75, 39);
             this.btnDeleteDuplicates.TabIndex = 7;
             this.btnDeleteDuplicates.Text = "Del Dup";
             this.btnDeleteDuplicates.UseVisualStyleBackColor = true;
             this.btnDeleteDuplicates.Click += new System.EventHandler(this.btnDeleteDuplicates_Click);
             // 
-            // toolStrip1
+            // mbtnRefresh
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripBtnSave});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(516, 25);
-            this.toolStrip1.TabIndex = 8;
-            this.toolStrip1.Text = "toolStrip1";
+            this.mbtnRefresh.Highlight = true;
+            this.mbtnRefresh.Location = new System.Drawing.Point(403, 47);
+            this.mbtnRefresh.Name = "mbtnRefresh";
+            this.mbtnRefresh.Size = new System.Drawing.Size(88, 46);
+            this.mbtnRefresh.TabIndex = 10;
+            this.mbtnRefresh.Text = "Refresh";
+            this.mbtnRefresh.Click += new System.EventHandler(this.mbtnRefresh_Click);
             // 
-            // toolStripButton1
+            // mtxtSearch
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
+            this.mtxtSearch.FontSize = MetroFramework.MetroTextBoxSize.Medium;
+            this.mtxtSearch.Location = new System.Drawing.Point(126, 57);
+            this.mtxtSearch.Name = "mtxtSearch";
+            this.mtxtSearch.Size = new System.Drawing.Size(249, 25);
+            this.mtxtSearch.TabIndex = 11;
             // 
-            // toolStripBtnSave
+            // mlblInfo
             // 
-            this.toolStripBtnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripBtnSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnSave.Image")));
-            this.toolStripBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripBtnSave.Name = "toolStripBtnSave";
-            this.toolStripBtnSave.Size = new System.Drawing.Size(23, 22);
-            this.toolStripBtnSave.Text = "toolStripButton2";
-            this.toolStripBtnSave.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.mlblInfo.AutoSize = true;
+            this.mlblInfo.Location = new System.Drawing.Point(126, 95);
+            this.mlblInfo.Name = "mlblInfo";
+            this.mlblInfo.Size = new System.Drawing.Size(80, 19);
+            this.mlblInfo.TabIndex = 12;
+            this.mlblInfo.Text = "Metro Label";
             // 
-            // btnRefresh
+            // Play
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(393, 55);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btnRefresh.TabIndex = 9;
-            this.btnRefresh.Text = "Refresh";
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.Play.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Play.Frozen = true;
+            this.Play.HeaderText = "Play";
+            this.Play.Name = "Play";
+            this.Play.Text = "Play";
+            this.Play.UseColumnTextForButtonValue = true;
+            this.Play.Width = 50;
             // 
-            // Form1
+            // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 335);
-            this.Controls.Add(this.btnRefresh);
-            this.Controls.Add(this.toolStrip1);
+            this.ClientSize = new System.Drawing.Size(516, 401);
+            this.Controls.Add(this.mlblInfo);
+            this.Controls.Add(this.mtxtSearch);
+            this.Controls.Add(this.mbtnRefresh);
             this.Controls.Add(this.btnDeleteDuplicates);
-            this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lblSearch);
-            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnLoad);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "frmMain";
+            this.Text = "Tangent Movie Manager";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,15 +170,13 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Label lblSearch;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.Button btnDeleteDuplicates;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripBtnSave;
-        private System.Windows.Forms.Button btnRefresh;
+        private MetroFramework.Controls.MetroButton mbtnRefresh;
+        private MetroFramework.Controls.MetroTextBox mtxtSearch;
+        private MetroFramework.Controls.MetroLabel mlblInfo;
+        private System.Windows.Forms.DataGridViewButtonColumn Play;
     }
 }
 
