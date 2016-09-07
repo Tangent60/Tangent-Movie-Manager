@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-
-namespace WindowsFormsApplication2
+﻿namespace WindowsFormsApplication2
 {
     class Utility
     {
@@ -23,5 +20,22 @@ namespace WindowsFormsApplication2
         //    result = result.Remove(result.Length - 1); // remove the trailing "."
         //    return result;
         //}
+
+        public static string[] GetVideoExtensions()
+        {
+            return new string[] {".dat", ".webm",".mkv",".flv",".vob",".ogv, ",".ogg"
+                ,".drc",".gif",".gifv",".mng",".avi",".mov, ",".qt",".wmv"
+                ,".yuv",".rm",".rmvb",".asf",".amv",".mp4, ",".m4p",".m4v"
+                ,".mpg, ",".mp2", ".mp4",".mpeg",".mpe",".mpv",".mpg"
+                ,".mpeg, ",".m2v",".m4v",".svi",".3gp",".3g2",".mxf"
+                ,".roq",".nsv",".flv ",".f4v ",".f4p ",".f4a ",".f4b" };
+        }
+
+        public static string[] GetNonVideoExtensions()
+        {
+            string[] fileExtExcluded = new string[] { ".txt", ".nfo", ".db", ".jpg"
+                , ".png", ".srt", ".rar", ".gif", ".sub" };
+            return fileExtExcluded;
+        }
     }
 }

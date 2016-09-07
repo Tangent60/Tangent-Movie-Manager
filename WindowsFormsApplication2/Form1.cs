@@ -133,12 +133,25 @@ namespace WindowsFormsApplication2
             List<Movie> listMovies = new List<Movie>();
             Movie objMovie = new Movie();
 
-            string[] fileExtExcluded = new string[] { ".txt", ".nfo", ".db", ".jpg", ".png", ".srt" };
+            string[] fileExtExcluded = Utility.GetNonVideoExtensions();
+            string[] fileExtVideos = Utility.GetVideoExtensions();
+
+            fileExtExcluded = (from str in fileExtExcluded
+                               select str.ToUpper()).ToArray();
+
+            fileExtVideos = (from str in fileExtVideos
+                             select str.ToUpper()).ToArray();
 
             foreach (string file in strFiles)
             {
-                if (fileExtExcluded.Contains(Path.GetExtension(file)))
+                string extension = Path.GetExtension(file);
+                extension = extension.ToUpper();
+
+                if (fileExtExcluded.Contains(extension))
                     continue;
+
+                if (!fileExtVideos.Contains(extension))
+                    logger.Warn("Unsupported Extension - " + extension);
 
                 logger.Debug(file);
 
