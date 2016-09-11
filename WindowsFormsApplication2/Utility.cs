@@ -1,4 +1,6 @@
-﻿namespace WindowsFormsApplication2
+﻿using System.Configuration;
+
+namespace WindowsFormsApplication2
 {
     class Utility
     {
@@ -36,6 +38,15 @@
             string[] fileExtExcluded = new string[] { ".txt", ".nfo", ".db", ".jpg"
                 , ".png", ".srt", ".rar", ".gif", ".sub" };
             return fileExtExcluded;
+        }
+
+        internal static void UpdateSetting(string key, string value)
+        {
+            Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            configuration.AppSettings.Settings[key].Value = value;
+            configuration.Save();
+
+            ConfigurationManager.RefreshSection("appSettings");
         }
     }
 }

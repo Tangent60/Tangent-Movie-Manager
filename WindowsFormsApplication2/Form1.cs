@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -30,7 +31,15 @@ namespace WindowsFormsApplication2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            LoadDataFromDisk();
+            string savedFolderPath = GetSavedSettings();
+            string selectedFolder;
+
+            selectedFolder = OpenFile(savedFolderPath);
+            
+            LoadDataFromDisk(selectedFolder);
+
+            if (savedFolderPath != selectedFolder)
+                SaveSettings(selectedFolder);
 
             mlblInfo.Text = "Found " + dataGridView1.RowCount + " records.";
         }
@@ -118,17 +127,13 @@ namespace WindowsFormsApplication2
             }
         }
 
-        private void LoadDataFromDisk()
+        private void LoadDataFromDisk(string selectedFolder)
         {
             DateTime dtStartTime = DateTime.Now;
             string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
             LogMethodInsideTrace(methodName);
-            //Directory dir = new Directory;
-            //dir.
-            //F:\Movies\2016
-            //string path = @"F:\Movies\2016";
-            string path = @"F:\Movies";
-            string[] strFiles = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+
+            string[] strFiles = Directory.GetFiles(selectedFolder, "*", SearchOption.AllDirectories);
 
             List<Movie> listMovies = new List<Movie>();
             Movie objMovie = new Movie();
@@ -317,6 +322,30 @@ namespace WindowsFormsApplication2
         private void LogMethodInsideTrace(string methodName)
         {
             logger.Trace("Inside " + methodName);
+        }
+
+        private string OpenFile(string savedFolderPath)
+        {
+            string selectedFolder = null;
+
+            if(!string.IsNullOrEmpty(savedFolderPath))
+                folderBrowserDialog1.SelectedPath = savedFolderPath;
+
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                selectedFolder = folderBrowserDialog1.SelectedPath;
+
+            return selectedFolder;
+        }
+
+        private string GetSavedSettings()
+        {
+            string savedFolderName = BL.FolderPath;
+            return savedFolderName;
+        }
+
+        private void SaveSettings(string selectedFolder)
+        {
+            Utility.UpdateSetting(BL.FOLDER_PATH, selectedFolder);
         }
         #endregion
     }

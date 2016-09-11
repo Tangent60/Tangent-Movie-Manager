@@ -30,6 +30,7 @@
         {
             this.btnLoad = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Play = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblSearch = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
@@ -37,7 +38,7 @@
             this.mbtnRefresh = new MetroFramework.Controls.MetroButton();
             this.mtxtSearch = new MetroFramework.Controls.MetroTextBox();
             this.mlblInfo = new MetroFramework.Controls.MetroLabel();
-            this.Play = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -64,6 +65,16 @@
             this.dataGridView1.Size = new System.Drawing.Size(516, 275);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // Play
+            // 
+            this.Play.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Play.Frozen = true;
+            this.Play.HeaderText = "Play";
+            this.Play.Name = "Play";
+            this.Play.Text = "Play";
+            this.Play.UseColumnTextForButtonValue = true;
+            this.Play.Width = 50;
             // 
             // panel1
             // 
@@ -132,16 +143,6 @@
             this.mlblInfo.TabIndex = 12;
             this.mlblInfo.Text = "Metro Label";
             // 
-            // Play
-            // 
-            this.Play.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Play.Frozen = true;
-            this.Play.HeaderText = "Play";
-            this.Play.Name = "Play";
-            this.Play.Text = "Play";
-            this.Play.UseColumnTextForButtonValue = true;
-            this.Play.Width = 50;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -177,6 +178,7 @@
         private MetroFramework.Controls.MetroTextBox mtxtSearch;
         private MetroFramework.Controls.MetroLabel mlblInfo;
         private System.Windows.Forms.DataGridViewButtonColumn Play;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 

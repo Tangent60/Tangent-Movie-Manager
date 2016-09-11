@@ -1,13 +1,24 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
-using NLog;
 
 namespace WindowsFormsApplication2
 {
     class BL
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
+
+        public const string FOLDER_PATH = "FolderPath";
+
+        public static string FolderPath
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[FOLDER_PATH];
+            }
+        }
 
         internal List<Movie> GetMovies(string fullPath = null)
         {
